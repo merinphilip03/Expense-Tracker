@@ -28,7 +28,6 @@ export default function App() {
   const [loading,  setLoading]      = useState(false);
   const [error,    setError]        = useState("");
 
-  const today = new Date();
 
   const loadExpenses = useCallback(async (f = filters) => {
     try {
@@ -41,7 +40,8 @@ export default function App() {
 
   const loadSummary = useCallback(async () => {
     try {
-      const res = await fetchMonthlySummary(today.getMonth() + 1, today.getFullYear());
+      const t = new Date();
+      const res = await fetchMonthlySummary(t.getMonth() + 1, t.getFullYear());
       setSummary(res.data);
     } catch {
       setError("Failed to load summary.");
@@ -51,7 +51,7 @@ export default function App() {
   useEffect(() => {
     loadExpenses();
     loadSummary();
-  }, []);
+  }, [loadExpenses, loadSummary]);
 
   const handleFilter = (f) => {
     setFilters(f);
